@@ -2,7 +2,7 @@
 
 ## How to run
 
-#### On local host
+### On local host
 To run client and server at the same time just do the following:  
 
 `git clone https://github.com/Farrukhraz/messenger.git`  
@@ -14,7 +14,7 @@ To run client and server at the same time just do the following:
 In this case server will receive connections from all hosts on 7777 port.
 Client will run on 'localhost:7777'
 
-#### On specified address
+### On specified address
 
 `git clone https://github.com/Farrukhraz/messenger.git`  
 
