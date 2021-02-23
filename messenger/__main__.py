@@ -9,7 +9,7 @@ from messenger.server import Server
 
 CLIENT_HOST = 'localhost'
 SERVER_HOST = ''
-SERVER_PORT = 6543
+SERVER_PORT = 7777
 CONN_FAMILY = socket.AF_INET
 CONN_TYPE = socket.SOCK_STREAM
 
