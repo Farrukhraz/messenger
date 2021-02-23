@@ -1,0 +1,14 @@
+{
+  "type": "UserMessage",
+  "time": "",
+  "user": {
+          "username": ""
+  },
+  "send_to": {
+    "user": {
+      "username": ""
+    }
+  },
+  "encoding": "",
+  "message": ""
+}

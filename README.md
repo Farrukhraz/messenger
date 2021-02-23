@@ -2,7 +2,7 @@
 
 ## How to run
 
-### On local host
+### On local host (Currently not working, sorry =/. Use **'On specified address'** instead)
 To run client and server at the same time just do the following:  
 
 `git clone https://github.com/Farrukhraz/messenger.git`  

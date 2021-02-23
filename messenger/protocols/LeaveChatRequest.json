@@ -1,0 +1,8 @@
+{
+  "type": "LeaveChatRequest",
+  "time": "",
+  "user": {
+          "username": ""
+  },
+  "chat_id": ""
+}

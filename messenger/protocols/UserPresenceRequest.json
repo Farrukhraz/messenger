@@ -1,0 +1,7 @@
+{
+  "type": "UserPresenceRequest",
+  "time": "",
+  "user": {
+          "username": ""
+  }
+}

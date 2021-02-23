@@ -1,0 +1,8 @@
+{
+  "type": "AuthenticationRequest",
+  "time": "",
+  "user": {
+          "username": "",
+          "password":     ""
+  }
+}

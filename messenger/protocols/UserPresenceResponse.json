@@ -1,0 +1,11 @@
+{
+  "type": "UserPresenceResponse",
+  "time": "",
+  "user": {
+          "username": ""
+  },
+  "result": {
+    "status": "",
+    "description": ""
+  }
+}

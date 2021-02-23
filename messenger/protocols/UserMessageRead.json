@@ -1,0 +1,7 @@
+{
+  "type": "UserMessageRead",
+  "time": "",
+  "user": {
+          "username": ""
+  }
+}
