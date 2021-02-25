@@ -17,9 +17,8 @@ if Path(__file__).absolute().parent == Path().cwd():
     from message_handler import MessageHandler
     PROTOCOLS_PATH = Path().cwd().parent.joinpath('protocols')
 else:
-    # if client run from messenger/__main__.py (NOT CURRENTLY SUPPORTED)
-    from messenger.client.message_handler import MessageHandler
-    PROTOCOLS_PATH = Path().cwd().joinpath('protocols')
+    raise EnvironmentError("Error! Please start the client from /messenger/client directory "
+                           "by 'python main.py -addr localhost' command")
 
 
 class Client:
@@ -32,10 +31,11 @@ class Client:
         self.__conn_type = connection_type
         self.__conn_family = connection_family
         self.__to_stop = False
-        self.__message_handler = MessageHandler(PROTOCOLS_PATH)
         self.user = "Ivanov12345"
+        self.__message_handler = MessageHandler(PROTOCOLS_PATH, self.user)
 
     def run(self) -> None:
+        # ToDo use ZeroMQ or socket + select (lib)
         with socket(family=self.__conn_family, type=self.__conn_type) as s:
             if not self.__conn_family == AF_INET:
                 raise ConnectionError(f"Unknown connection family. "
@@ -44,23 +44,25 @@ class Client:
                 try:
                     s.connect(self.__address)
                 except ConnectionRefusedError as exc:
-                    raise ConnectionError(f"Server is not running or other server error occurred. Error: {exc}")
-                message = input('Write something to send to the server: ')
-                to_send = dict(
-                    username=self.user,
-                    send_to="Petrov12345",
-                    message=message,
-                )
-                # Сейчас тут вот так по глупому отправляется. В дальнейшем вынесу отправку сообщений
-                # в отдельную корутину. И вообще сделаю принятие сообщений в через модуль select
-                # s.sendall(to_send)
-                self.__message_handler.send_user_message(to_send, temporary_communicator=s)
-                received_data = s.recv(1024)
-                self.__message_handler.handle_message(received_data)
+                    raise ConnectionError(f"Server is not running or unknown ServerError occurred. Error: {exc}")
+                self.__message_handler.communicator = s
+                self.__start_chat_session(s)
             else:
                 raise ConnectionError(f"Unknown connection type. "
                                       f"Expected: SOCK_STREAM. Actual: {str(self.__conn_type)}")
-        # print(f"Received data from the server: '{received_data.decode(encoding='utf-8')}'")
+
+    def __start_chat_session(self, sock: socket) -> None:
+        while not self.__to_stop:
+            received_data = sock.recv(1024)
+            self.__message_handler.handle_message(received_data)
+
+            message = input('Write something to send to the server: ')
+            to_send = dict(
+                username=self.user,
+                send_to="Petrov12345",
+                message=message,
+            )
+            self.__message_handler.send_user_message(to_send, temporary_communicator=sock)
 
     def stop(self) -> None:
         """ Switch-flag for stopping the client """

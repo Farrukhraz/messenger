@@ -1,31 +1,22 @@
 # **Messenger**
 
-## How to run
-
-### On local host (Currently not working, sorry =/. Use **'On specified address'** instead)
-To run client and server at the same time just do the following:  
+## How to run (On local host)
 
 `git clone https://github.com/Farrukhraz/messenger.git`  
 
-`cd messenger`  
-
-`python messenger`  
-
-In this case server will receive connections from all hosts on 7777 port.
-Client will run on 'localhost:7777'
-
-### On specified address
-
-`git clone https://github.com/Farrukhraz/messenger.git`  
-
-**Run *server***:  
+### **Run *server***:  
 
 `cd messenger/server`  
 
-`python main.py [-p 1234 -addr blabla.com]`
+`python main.py [-p 7777 -addr blabla.com]`  
 
-**Run *client***:  
+`-p` and `-addr` arguments are optional. By default `-p=7777` and `-addr=" "`  
+
+### **Run *client***:  
 
 `cd messenger/client`  
 
-`python main.py -addr blabla.com [-p 1234]`
+`python main.py -addr localhost [-p 7777]`  
+
+`-p` argument is optional but `-addr` is required. By default `-p=7777`. Use `-addr localhost`
+to run client locally   

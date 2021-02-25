@@ -29,31 +29,15 @@ class MessageConverter:
             raise NameError
         return message_type
 
-    def get_user_message_message(self, message_data: dict, encoding: 'str' = "utf-8") -> bytes:
-        protocol_path = self.__get_protocol_path(MessageTypes.UserMessage)
+    def get_user_presence_request_message(self, message_data: dict, encoding: 'str' = "utf-8") -> bytes:
+        protocol_path = self.__get_protocol_path(MessageTypes.UserPresenceRequest)
         protocol_data = self.__deserialize_json(protocol_path)
-        user_from = message_data.get('username')
-        user_to = message_data.get('send_to')
-        user_message = message_data.get('message')
-        if None in (user_from, user_to, user_message):
-            raise ValueError("One of user_to/user_from/user_message is not given. "
-                             f"Given data: {message_data}")
-        protocol_data['user']['username'] = user_from
-        protocol_data['send_to']['user']['username'] = user_to
-        protocol_data['message'] = user_message
-        protocol_data['time'] = self.__get_iso_time()
-        protocol_data['encoding'] = encoding
-        return self.__serialize_message(protocol_data, encoding)
-
-    def get_presence_response_message(self, username, status: int = 200,
-                                      desc: str = 'Ok') -> bytes:
-        protocol_path = self.__get_protocol_path(MessageTypes.UserPresenceResponse)
-        protocol_data = self.__deserialize_json(protocol_path)
+        username = message_data.get('username')
+        if username is None:
+            raise ValueError("Username is not given.")
         protocol_data['user']['username'] = username
         protocol_data['time'] = self.__get_iso_time()
-        protocol_data['result']['status'] = status
-        protocol_data['result']['description'] = desc
-        return self.__serialize_message(protocol_data)
+        return self.__serialize_message(protocol_data, encoding)
 
     def __get_protocol_path(self, protocol_name: MessageTypes) -> Path:
         a = protocol_name.value

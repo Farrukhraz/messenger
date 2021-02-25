@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import argparse
 
 from socket import (
@@ -10,10 +12,12 @@ from socket import (
 from pathlib import Path
 
 
-if Path(__file__).parent == Path().cwd():
+if Path(__file__).absolute().parent == Path().cwd():
     from message_handler import MessageHandler
+    PROTOCOLS_PATH = Path().cwd().parent.joinpath('protocols')
 else:
-    from messenger.server.message_handler import MessageHandler
+    raise EnvironmentError("Error! Please start the server from /messenger/server directory "
+                           "by 'python main.py' command")
 
 
 class Server:
@@ -26,9 +30,10 @@ class Server:
         self.__conn_type = connection_type
         self.__conn_family = connection_family
         self.__to_stop = False
-        self.__message_handler = MessageHandler()
+        self.__message_handler = MessageHandler(PROTOCOLS_PATH)
 
     def run(self) -> None:
+        # ToDo make the server work with multiple clients
         with socket(family=self.__conn_family, type=self.__conn_type) as s:
             if not self.__conn_family == AF_INET:
                 raise ConnectionError(f"Unknown connection family. "
@@ -38,14 +43,18 @@ class Server:
                 s.listen()
                 print("Server started and waiting for connections...")
                 conn, addr = s.accept()
+                self.__message_handler.communicator = conn
                 with conn:
                     print(f"Connection established with {addr}")
+                    self.__message_handler.send_precence_request_message()
                     while not self.__to_stop:
-                        data = conn.recv(1024)
-                        if not data:
-                            break
-                        print(f"Received data from client: {data.decode(encoding='utf-8')}")
-                        conn.sendall(data)
+
+                        received_message = conn.recv(4096)
+                        self.__message_handler.handle_message(received_message)
+                        # if not received_message:
+                        #     break
+                        # print(f"Received data from client: {received_message.decode(encoding='utf-8')}")
+                        # conn.sendall(received_message)
             else:
                 raise ConnectionError(f"Unknown connection type. "
                                       f"Expected: SOCK_STREAM. Actual: {str(self.__conn_type)}")
