@@ -1,0 +1,8 @@
+{
+  "type": "JoinChatRequest",
+  "time": "",
+  "user": {
+          "username": ""
+  },
+  "chat_id": ""
+}

@@ -1,0 +1,7 @@
+{
+  "type": "UserMessageDelivered",
+  "time": "",
+  "user": {
+          "username": ""
+  }
+}
